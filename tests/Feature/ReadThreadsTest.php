@@ -9,16 +9,11 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ThreadsTest extends TestCase
 {
     use DatabaseMigrations;
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
 
-     public function setUp()
+    public function setUp()
      {
         parent::setUp();
-        $this->thread = factory('App\Thread')->create();
+        $this->thread = create('App\Thread');
      }
     public function test_a_user_can_view_all_threads()
     {
@@ -34,12 +29,7 @@ class ThreadsTest extends TestCase
 
     public function test_a_user_can_read_replies_that_are_associated_with_a_thread()
     {
-        // Thread includes replies
-        // When we visit a thread page
-        // Then we should see the associated replies
-        $reply = factory('App\Reply')
-            ->create(['thread_id' => $this->thread->id]);
-
+        $reply = create('App\Reply', ['thread_id' => $this->thread->id]);
         $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
