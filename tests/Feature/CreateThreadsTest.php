@@ -35,7 +35,7 @@ class CreateThreadsTest extends TestCase
 
         $response = $this->post('/threads', $thread->toArray());
 
-        $this->get($response->headers->get('location'))
+        $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
             ->assertSee($thread->body);
     }
@@ -65,8 +65,8 @@ class CreateThreadsTest extends TestCase
 
     public function publishThread($overrides = [])
     {
-        $this->withExceptionHandling()
-            ->signIn();
+
+        $this->withExceptionHandling()->signIn();
 
         $thread = make('App\Thread', $overrides);
 
