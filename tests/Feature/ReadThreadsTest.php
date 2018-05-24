@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
+use App\Thread;
+use App\Channel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -13,7 +16,7 @@ class ThreadsTest extends TestCase
     public function setUp()
      {
         parent::setUp();
-        $this->thread = create('App\Thread');
+        $this->thread = create(Thread::class);
      }
     public function test_a_user_can_view_all_threads()
     {
@@ -29,16 +32,16 @@ class ThreadsTest extends TestCase
 
     public function test_a_user_can_read_replies_that_are_associated_with_a_thread()
     {
-        $reply = create('App\Reply', ['thread_id' => $this->thread->id]);
+        $reply = create(Reply::class, ['thread_id' => $this->thread->id]);
         $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
 
     public function test_a_user_can_filter_threads_according_to_a_channel()
     {
-        $channel = create('App\Channel');
-        $threadInChannel = create('App\Thread', ['channel_id' => $channel->id]);
-        $threadNotInChannel = create('App\Thread');
+        $channel = create(Channel::class);
+        $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
+        $threadNotInChannel = create(Thread::class);
 
         $this->get('/threads/' . $channel->slug)
             ->assertSee($threadInChannel->title)
