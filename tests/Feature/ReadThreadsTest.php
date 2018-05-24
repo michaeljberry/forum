@@ -20,7 +20,7 @@ class ThreadsTest extends TestCase
      }
     public function test_a_user_can_view_all_threads()
     {
-        $this->get('/threads')
+        $this->get(route('threads'))
             ->assertSee($this->thread->title);
     }
 
@@ -43,7 +43,7 @@ class ThreadsTest extends TestCase
         $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
         $threadNotInChannel = create(Thread::class);
 
-        $this->get('/threads/' . $channel->slug)
+        $this->get(route('channel', ['channel' => $channel->slug]))
             ->assertSee($threadInChannel->title)
             ->assertDontSee($threadNotInChannel->title);
     }
