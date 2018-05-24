@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\User;
+use App\Thread;
+use App\Channel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,12 +19,12 @@ class ThreadTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->thread = create('App\Thread');
+        $this->thread = create(Thread::class);
     }
 
     public function test_a_thread_can_make_a_string_path()
     {
-        $thread = create('App\Thread');
+        $thread = create(Thread::class);
         $this->assertEquals(
             "/threads/{$thread->channel->slug}/{$thread->id}",
             $thread->path()
@@ -30,7 +33,7 @@ class ThreadTest extends TestCase
 
     public function test_a_thread_has_a_creator()
     {
-        $this->assertInstanceOf('App\User', $this->thread->creator);
+        $this->assertInstanceOf(User::class, $this->thread->creator);
     }
 
     public function test_a_thread_can_have_replies()
@@ -49,7 +52,7 @@ class ThreadTest extends TestCase
 
     public function test_a_thread_belongs_to_a_channel()
     {
-        $thread = create('App\Thread');
-        $this->assertInstanceOf('App\Channel', $thread->channel);
+        $thread = create(Thread::class);
+        $this->assertInstanceOf(Channel::class, $thread->channel);
     }
 }

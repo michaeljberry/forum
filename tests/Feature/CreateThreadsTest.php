@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Thread;
+use App\Channel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -24,7 +26,7 @@ class CreateThreadsTest extends TestCase
     {
         $this->signIn();
 
-        $thread = make('App\Thread');
+        $thread = make(Thread::class);
 
         $response = $this->post('/threads', $thread->toArray());
 
@@ -47,7 +49,7 @@ class CreateThreadsTest extends TestCase
 
     public function test_a_thread_requires_a_valid_channel()
     {
-        factory('App\Channel', 2)->create();
+        factory(Channel::class, 2)->create();
 
         $this->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
@@ -61,7 +63,7 @@ class CreateThreadsTest extends TestCase
 
         $this->withExceptionHandling()->signIn();
 
-        $thread = make('App\Thread', $overrides);
+        $thread = make(Thread::class, $overrides);
 
         return $this->post('/threads', $thread->toArray());
     }

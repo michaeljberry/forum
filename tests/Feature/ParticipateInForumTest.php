@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Reply;
+use App\Thread;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -19,8 +21,8 @@ class ParticipateInForumTest extends TestCase
     public function test_an_authenticated_user_may_participate_in_forum_threads()
     {
         $this->signIn();
-        $thread = create('App\Thread');
-        $reply = make('App\Reply');
+        $thread = create(Thread::class);
+        $reply = make(Reply::class);
         $this->post($thread->path() . '/replies', $reply->toArray());
         $this->get($thread->path())
             ->assertSee($reply->body);
@@ -30,8 +32,8 @@ class ParticipateInForumTest extends TestCase
     {
         $this->withExceptionHandling()
             ->signIn();
-        $thread = create('App\Thread');
-        $reply = make('App\Reply', ['body' => null]);
+        $thread = create(Thread::class);
+        $reply = make(Reply::class, ['body' => null]);
         $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertSessionHasErrors();
     }
