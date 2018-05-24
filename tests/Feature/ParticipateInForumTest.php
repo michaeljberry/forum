@@ -14,7 +14,10 @@ class ParticipateInForumTest extends TestCase
     public function test_an_unauthenticated_user_may_not_participate_in_forum_threads()
     {
         $this->withExceptionHandling()
-            ->post('/threads/some-channel/1/replies', [])
+            ->post(route('replies', [
+                    'channel' => 'some-channel',
+                    'thread' => 1
+            ]),[])
             ->assertRedirect('/login');
     }
 

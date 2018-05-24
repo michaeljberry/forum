@@ -26,7 +26,7 @@ class ThreadTest extends TestCase
     {
         $thread = create(Thread::class);
         $this->assertEquals(
-            "/threads/{$thread->channel->slug}/{$thread->id}",
+            route('thread', ['channel' => $thread->channel->slug, 'thread' => $thread->id]),
             $thread->path()
         );
     }

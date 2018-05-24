@@ -15,11 +15,11 @@ class CreateThreadsTest extends TestCase
     {
         $this->withExceptionHandling();
 
-        $this->get('/threads/create')
-            ->assertRedirect('/login');
+        $this->get(route('create-thread'))
+            ->assertRedirect(route('login'));
 
-        $this->post('/threads')
-            ->assertRedirect('/login');
+        $this->post(route('threads'))
+            ->assertRedirect(route('login'));
     }
 
     public function test_an_authenticated_user_can_create_new_forum_threads()
@@ -28,7 +28,7 @@ class CreateThreadsTest extends TestCase
 
         $thread = make(Thread::class);
 
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->post(route('threads'), $thread->toArray());
 
         $this->get($response->headers->get('Location'))
             ->assertSee($thread->title)
@@ -65,7 +65,7 @@ class CreateThreadsTest extends TestCase
 
         $thread = make(Thread::class, $overrides);
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads'), $thread->toArray());
     }
 
 }
