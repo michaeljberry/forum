@@ -35,6 +35,9 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item"><a class="nav-link" href="{{ route('threads') }}">All Threads</a></li>
+                        @auth
+                            <li><a class="nav-link" href="{{ route('create-thread') }}">New Thread</a></li>
+                        @endauth
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Channels
@@ -45,9 +48,6 @@
                                 @endforeach
                             </div>
                         </li>
-                        @auth
-                            <li><a class="nav-link" href="{{ route('create-thread') }}">New Thread</a></li>
-                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
