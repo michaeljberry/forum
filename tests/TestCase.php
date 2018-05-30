@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\User;
 use App\Exceptions\Handler;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -18,7 +19,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function signIn($user = null)
     {
-         $user = $user ?: create('App\User');
+         $user = $user ?: create(User::class);
          $this->actingAs($user);
          return $this;
     }
