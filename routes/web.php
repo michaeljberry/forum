@@ -30,6 +30,7 @@ Route::post('/threads', 'ThreadsController@store');
  */
 Route::get('/threads/{channel}', 'ThreadsController@index')->name('channel');
 Route::get('/threads/{channel}/{thread}', 'ThreadsController@show')->name('thread');
+Route::delete('/threads/{channel}/{thread}', 'ThreadsController@destroy');
 
 /**
  * Replies
