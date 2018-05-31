@@ -66,4 +66,13 @@ class ThreadsController extends Controller
 
         return $threads->get();
     }
+
+    public function destroy($channel, Thread $thread)
+    {
+        $thread->delete();
+        if (request()->wantsJson()) {
+            return response([], 204);
+        }
+        return redirect(route('threads'));
+    }
 }
