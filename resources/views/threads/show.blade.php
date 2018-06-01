@@ -15,7 +15,7 @@
                         </span>
                         <form action="{{ $thread->path() }}" method="POST">
                             @csrf
-                            {{ method_field('DELETE') }}
+                            @method('DELETE')
                             <button type="submit" class="btn btn-link">Delete</button>
                         </form>
                     </div>
