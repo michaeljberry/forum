@@ -24,7 +24,7 @@
                 </div>
             @empty
                 <p>There are no relevant threads at this time.</p>
-            @endforeach
+            @endforelse
         </div>
     </div>
 </div>
