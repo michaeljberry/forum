@@ -7,6 +7,7 @@ use App\Thread;
 use App\Channel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Activity;
 
 class ManageThreadsTest extends TestCase
 {
@@ -80,6 +81,8 @@ class ManageThreadsTest extends TestCase
         $response->assertStatus(204);
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        $this->assertEquals(0, Activity::count());
     }
 
     public function publishThread($overrides = [])
