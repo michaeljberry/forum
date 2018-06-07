@@ -33,7 +33,11 @@ class ThreadsTest extends TestCase
 
     public function test_a_user_can_read_replies_that_are_associated_with_a_thread()
     {
-        $reply = create(Reply::class, ['thread_id' => $this->thread->id]);
+        $reply = create(Reply::class, [
+            'attributes' => [
+                'thread_id' => $this->thread->id
+            ]
+        ]);
         $this->get($this->thread->path())
             ->assertSee($reply->body);
     }
@@ -41,7 +45,11 @@ class ThreadsTest extends TestCase
     public function test_a_user_can_filter_threads_according_to_a_channel()
     {
         $channel = create(Channel::class);
-        $threadInChannel = create(Thread::class, ['channel_id' => $channel->id]);
+        $threadInChannel = create(Thread::class, [
+            'attributes' => [
+                'channel_id' => $channel->id
+            ]
+        ]);
         $threadNotInChannel = create(Thread::class);
 
         $this->get(route('channel', ['channel' => $channel->slug]))
@@ -51,9 +59,17 @@ class ThreadsTest extends TestCase
 
     public function test_a_user_can_filter_by_any_username()
     {
-        $this->signIn(create(User::class, ['name' => 'JohnDoe']));
+        $this->signIn(create(User::class, [
+            'attributes' => [
+                'name' => 'JohnDoe'
+            ]
+        ]));
 
-        $threadByJohn = create(Thread::class, ['user_id' => auth()->id()]);
+        $threadByJohn = create(Thread::class, [
+            'attributes' => [
+                'user_id' => auth()->id()
+            ]
+        ]);
         $threadNotByJohn = create(Thread::class);
 
         $this->get('/threads?by=JohnDoe')
@@ -64,10 +80,20 @@ class ThreadsTest extends TestCase
     public function test_a_user_can_filter_threads_by_popularity()
     {
         $threadWithTwoReplies = create(Thread::Class);
-        create(Reply::class, ['thread_id' => $threadWithTwoReplies->id], 2);
+        create(Reply::class, [
+            'attributes' => [
+                'thread_id' => $threadWithTwoReplies->id
+            ],
+            'times' => 2
+        ]);
 
         $threadWithThreeReplies = create(Thread::class);
-        create(Reply::class, ['thread_id' => $threadWithThreeReplies->id], 3);
+        create(Reply::class, [
+            'attributes' => [
+                'thread_id' => $threadWithThreeReplies->id
+            ],
+            'times' => 3
+        ]);
 
         $threadWithNoReplies = $this->thread;
 

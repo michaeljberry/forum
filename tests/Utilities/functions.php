@@ -1,11 +1,17 @@
 <?php
 
-function create($class, $attributes = [], $times = null)
+function create($class, $parameters = [])
 {
-    return factory($class, $times)->create($attributes);
+    $attributes = $parameters['attributes'] ?? [];
+    $times = $parameters['times'] ?? null;
+    $states = $parameters['states'] ?? [];
+    return factory($class, $times)->states($states)->create($attributes);
 }
 
-function make($class, $attributes = [], $times = null)
+function make($class, $parameters = [])
 {
-    return factory($class, $times)->make($attributes);
+    $attributes = $parameters['attributes'] ?? [];
+    $times = $parameters['times'] ?? null;
+    $states = $parameters['states'] ?? [];
+    return factory($class, $times)->states($states)->make($attributes);
 }

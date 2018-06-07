@@ -51,7 +51,7 @@ class ManageThreadsTest extends TestCase
 
     public function test_a_thread_requires_a_valid_channel()
     {
-        factory(Channel::class, 2)->create();
+        create(Channel::class, ['times' => 2]);
 
         $this->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
@@ -74,8 +74,16 @@ class ManageThreadsTest extends TestCase
     public function test_authorized_users_can_delete_threads()
     {
         $this->signIn();
-        $thread = create(Thread::class, ['user_id' => auth()->id()]);
-        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+        $thread = create(Thread::class, [
+            'attributes' => [
+                'user_id' => auth()->id()
+            ]
+        ]);
+        $reply = create(Reply::class, [
+            'attributes' => [
+                'thread_id' => $thread->id
+            ]
+        ]);
 
         $response = $this->json('DELETE', $thread->path());
         $response->assertStatus(204);
@@ -90,7 +98,7 @@ class ManageThreadsTest extends TestCase
 
         $this->withExceptionHandling()->signIn();
 
-        $thread = make(Thread::class, $overrides);
+        $thread = make(Thread::class, ['attributes' => $overrides]);
 
         return $this->post(route('threads'), $thread->toArray());
     }

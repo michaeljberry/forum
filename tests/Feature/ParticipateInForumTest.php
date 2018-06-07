@@ -36,7 +36,11 @@ class ParticipateInForumTest extends TestCase
         $this->withExceptionHandling()
             ->signIn();
         $thread = create(Thread::class);
-        $reply = make(Reply::class, ['body' => null]);
+        $reply = make(Reply::class, [
+            'attributes' => [
+                'body' => null
+            ]
+        ]);
         $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertSessionHasErrors();
     }
