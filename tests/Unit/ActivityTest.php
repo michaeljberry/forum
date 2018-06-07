@@ -46,7 +46,12 @@ class ActivityTest extends TestCase
     public function test_it_fetches_a_feed_for_any_user()
     {
         $this->signIn();
-        create(Thread::class, ['user_id' => auth()->id()], 2);
+        create(Thread::class, [
+            'attributes' => [
+                'user_id' => auth()->id()
+            ],
+            'times' => 2
+        ]);
 
         auth()->user()->activity()->first()->update(['created_at' => Carbon::now()->subWeek()]);
 
