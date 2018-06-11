@@ -51,9 +51,53 @@ class ParticipateInForumTest extends TestCase
 
         $reply = create(Reply::class);
 
-        $this->delete($reply->path())->assertRedirect(route('login'));
+        $this->delete("/replies/{$reply->id}")
+            ->assertRedirect(route('login'));
 
+        $this->signIn()
+            ->delete("/replies/{$reply->id}")
+            ->assertStatus(302);
+    }
+
+    public function test_authorized_users_can_delete_replies()
+    {
         $this->signIn();
-        $this->delete($reply->path())->assertStatus(403);
+        $reply = create(Reply::class, [
+            'attributes' => [
+                'user_id' => auth()->id()
+            ]
+        ]);
+
+        $this->delete("/replies/{$reply->id}")->assertStatus(302);
+
+        $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+    }
+
+    public function test_authorized_users_can_update_replies()
+    {
+        $this->signIn();
+        $reply = create(Reply::class, [
+            'attributes' => [
+                'user_id' => auth()->id()
+            ]
+        ]);
+        $updatedReply = "You are changed.";
+        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
+
+        $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply]);
+    }
+
+    public function test_unauthorized_users_cannot_update_replies()
+    {
+        $this->withExceptionHandling();
+
+        $reply = create(Reply::class);
+
+        $this->patch("/replies/{$reply->id}")
+            ->assertRedirect(route('login'));
+
+        $this->signIn()
+            ->patch("/replies/{$reply->id}")
+            ->assertStatus(302);
     }
 }
