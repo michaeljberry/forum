@@ -47841,19 +47841,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             editing: false,
-            body: this.attributes.body
+            body: this.attributes.body,
+            oldBody: this.attributes.body
         };
     },
 
     methods: {
         update: function update() {
-            axios.post('/replies/' + this.attributes.id, {
+            axios.patch('/replies/' + this.attributes.id, {
                 body: this.body
             });
-
+            // .then(() => {
             this.editing = false;
 
             flash('Updated!');
+            // })
+        },
+        cancelEdit: function cancelEdit() {
+            this.body = this.oldBody;
+            this.editing = false;
+            flash('Cancelled');
+        },
+        destroy: function destroy() {
+            axios.delete('/replies/' + this.attributes.id);
+
+            $(this.$el).fadeOut(300, function () {
+                flash('Your reply has been deleted');
+            });
         }
     }
 });
