@@ -4,18 +4,33 @@
         data() {
             return {
                 editing: false,
-                body: this.attributes.body
+                body: this.attributes.body,
+                oldBody: this.attributes.body
             }
         },
         methods: {
             update() {
-                axios.post('/replies/' + this.attributes.id, {
+                axios.patch('/replies/' + this.attributes.id, {
                     body: this.body
                 })
+                // .then(() => {
+                    this.editing = false
 
+                    flash('Updated!')
+                // })
+
+            },
+            cancelEdit() {
+                this.body = this.oldBody
                 this.editing = false
+                flash('Cancelled')
+            },
+            destroy() {
+                axios.delete('/replies/' + this.attributes.id)
 
-                flash('Updated!')
+                $(this.$el).fadeOut(300, () => {
+                    flash('Your reply has been deleted')
+                });
             }
         }
     }
