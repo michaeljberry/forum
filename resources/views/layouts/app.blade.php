@@ -22,6 +22,8 @@
     <style>
         .level {display: flex; align-items: center;}
         .flex {flex: 1;}
+        .mr-1 { margin-right: 1em;}
+        [v-cloak] { display:none;}
     </style>
 </head>
 <body>
@@ -31,6 +33,8 @@
         <main class="py-4">
             @yield('content')
         </main>
+
+        <flash message="{{ session('flash') }}"></flash>
     </div>
 </body>
 </html>

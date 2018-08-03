@@ -7,6 +7,7 @@ use App\Thread;
 use App\Channel;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Activity;
 
 class ManageThreadsTest extends TestCase
 {
@@ -50,7 +51,7 @@ class ManageThreadsTest extends TestCase
 
     public function test_a_thread_requires_a_valid_channel()
     {
-        factory(Channel::class, 2)->create();
+        create(Channel::class, ['times' => 2]);
 
         $this->publishThread(['channel_id' => null])
             ->assertSessionHasErrors('channel_id');
@@ -59,31 +60,37 @@ class ManageThreadsTest extends TestCase
             ->assertSessionHasErrors('channel_id');
     }
 
-    public function test_guests_cannot_delete_threads()
+    public function test_unauthorized_users_may_not_delete_threads()
     {
         $this->withExceptionHandling();
         $thread = create(Thread::class);
 
-        $response = $this->delete($thread->path());
+        $this->delete($thread->path())->assertRedirect(route('login'));
 
-        $response->assertRedirect(route('login'));
+        $this->signIn();
+        $this->delete($thread->path())->assertStatus(403);
     }
 
-    public function test_a_user_can_delete_own_thread()
+    public function test_authorized_users_can_delete_threads()
     {
         $this->signIn();
-        $thread = create(Thread::class);
-        $reply = create(Reply::class, ['thread_id' => $thread->id]);
+        $thread = create(Thread::class, [
+            'attributes' => [
+                'user_id' => auth()->id()
+            ]
+        ]);
+        $reply = create(Reply::class, [
+            'attributes' => [
+                'thread_id' => $thread->id
+            ]
+        ]);
 
         $response = $this->json('DELETE', $thread->path());
         $response->assertStatus(204);
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
-    }
 
-    public function test_threads_may_only_be_deleted_by_those_who_have_permission()
-    {
-
+        $this->assertEquals(0, Activity::count());
     }
 
     public function publishThread($overrides = [])
@@ -91,7 +98,7 @@ class ManageThreadsTest extends TestCase
 
         $this->withExceptionHandling()->signIn();
 
-        $thread = make(Thread::class, $overrides);
+        $thread = make(Thread::class, ['attributes' => $overrides]);
 
         return $this->post(route('threads'), $thread->toArray());
     }

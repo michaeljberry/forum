@@ -15,7 +15,11 @@ class ChannelTest extends TestCase
     public function test_a_channel_consists_of_threads()
     {
         $channel = create(Channel::class);
-        $thread = create(Thread::class, ['channel_id' => $channel->id]);
+        $thread = create(Thread::class, [
+            'attributes' => [
+                'channel_id' => $channel->id
+            ]
+        ]);
 
         $this->assertTrue($channel->threads->contains($thread));
     }

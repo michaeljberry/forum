@@ -6,31 +6,18 @@
             <div class="page-header">
                 <h1>
                     {{ $profileUser->name }}
-                    <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
                 </h1>
             </div>
-            @foreach ($threads as $thread)
-                <div class="card">
-                    <div class="card-header">
-                        <div class="level">
-                            <span class="flex">
-                                <a href="#">
-                                    {{  $thread->creator->name }} posted:
-                                </a>
-                                {{ $thread->title }}
-                            </span>
-                            <span>
-                                {{ $thread->created_at->diffForHumans() }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        {{ $thread->body }}
-                    </div>
-                </div>
+            @foreach ($activities as $date => $activity)
+                <h3 class="page-header">{{ $date }}</h3>
+                @foreach($activity as $record)
+                    @if (view()->exists("profiles.activities.{$record->type}"))
+                        @include("profiles.activities.{$record->type}", ['activity' => $record])
+                    @endif
+                @endforeach
             @endforeach
         </div>
 
-        {{ $threads->links() }}
+        {{-- {{ $activity->links() }}--}}
     </div>
 @endsection

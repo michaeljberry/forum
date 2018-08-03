@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\RepliesController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,7 +39,14 @@ Route::delete('/threads/{channel}/{thread}', 'ThreadsController@destroy');
  */
 Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index')->name('replies');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
+Route::patch('replies/{reply}', 'RepliesController@update');
+Route::delete('/replies/{reply}', 'RepliesController@destroy');
+
+/**
+ * Favorites
+ */
 Route::post('/replies/{reply}/favorites', 'FavoritesController@store');
+Route::delete('/replies/{reply}/favorites', 'FavoritesController@destroy');
 
 /**
  * Profile
