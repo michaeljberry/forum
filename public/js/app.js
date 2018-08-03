@@ -47943,27 +47943,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['reply'],
     data: function data() {
         return {
-            favoritesCount: this.reply.favoritesCount,
-            isFavorited: true
+            count: this.reply.favoritesCount,
+            active: this.reply.isFavorited
         };
     },
 
     computed: {
         classes: function classes() {
-            return ['btn', this.isFavorited ? 'btn-primary' : 'btn-default'];
+            return ['btn', this.active ? 'btn-primary' : 'btn-default'];
+        },
+        endpoint: function endpoint() {
+            return '/replies/' + this.reply.id + '/favorites';
         }
     },
     methods: {
         toggle: function toggle() {
-            if (this.isFavorited) {
-                axios.delete('/replies/' + this.reply.id + '/favorites');
-                this.isFavorited = false;
-                this.favoritesCount--;
-            } else {
-                axios.post('/replies/' + this.reply.id + '/favorites');
-                this.isFavorited = true;
-                this.favoritesCount++;
-            }
+            this.active ? this.destroy() : this.create();
+        },
+        create: function create() {
+            axios.post(this.endpoint);
+            this.active = true;
+            this.count++;
+        },
+        destroy: function destroy() {
+            axios.delete(this.endpoint);
+            this.active = false;
+            this.count--;
         }
     }
 });
@@ -47986,7 +47991,7 @@ var render = function() {
     [
       _c("span", { staticClass: "glyphicon glyphicon-heart" }),
       _vm._v(" "),
-      _c("span", { domProps: { textContent: _vm._s(_vm.favoritesCount) } })
+      _c("span", { domProps: { textContent: _vm._s(_vm.count) } })
     ]
   )
 }
