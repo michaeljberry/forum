@@ -1,6 +1,9 @@
 <script>
+    import Favorite from './Favorite.vue';
     export default {
+        name: 'reply',
         props: ['attributes'],
+        components: { Favorite },
         data() {
             return {
                 editing: false,
