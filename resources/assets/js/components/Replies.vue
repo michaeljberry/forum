@@ -3,6 +3,9 @@
         <div v-for="(reply, index) in items" :key="reply.id">
             <reply :data="reply" @deleted="remove(index)"></reply>
         </div>
+
+        <paginator :dataSet="dataSet" @updated="fetch"></paginator>
+
         <new-reply :endpoint="endpoint" @created="add"></new-reply>
     </div>
 </template>
@@ -24,12 +27,15 @@
             this.fetch();
         },
         methods: {
-            fetch() {
-                axios.get(this.url())
-                    .then(this.refresh)
+            fetch(page) {
+                axios.get(this.url(page)).then(this.refresh)
             },
-            url() {
-                return location.pathname + '/replies';
+            url(page) {
+                if (! page) {
+                    let query = location.search.match(/page=(\d+)/);
+                    page = query ? query[1] : 1;
+                }
+                return location.pathname + '/replies?page=' + page;
             },
             refresh(response) {
                 this.dataSet = response.data;
