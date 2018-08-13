@@ -64507,6 +64507,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         refresh: function refresh(response) {
             this.dataSet = response.data;
             this.items = response.data.data;
+            window.scrollTo(0, 0);
         }
     }
 });
